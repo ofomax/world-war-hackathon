@@ -249,9 +249,40 @@ function App() {
 
         // Handle shooting
         if (mouseDownRef.current && (playerRef.current.canShoot() || playerRef.current.weaponUpgraded || playerRef.current.hasMachineGun)) {
-          // Convert screen coordinates to world coordinates
-          const worldMouseX = mousePosRef.current.x + cameraXRef.current;
-          const worldMouseY = mousePosRef.current.y;
+          // Check if mobile
+          const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) || window.innerWidth <= 768;
+          let worldMouseX, worldMouseY;
+          
+          if (isMobile) {
+            // Mobile: Calculate aim direction based on active movement keys
+            const keys = keysRef.current;
+            const playerX = playerRef.current.x;
+            const playerY = playerRef.current.y;
+            const offset = 200; // Distance to aim ahead
+            
+            let aimX = playerX;
+            let aimY = playerY;
+            
+            // Determine horizontal direction
+            if (keys['d']) {
+              aimX = playerX + offset; // Shoot right/forward
+            } else if (keys['a']) {
+              aimX = playerX - offset; // Shoot left
+            }
+            
+            // Determine vertical direction
+            if (keys['w']) {
+              aimY = playerY - offset; // Shoot up
+            }
+            
+            worldMouseX = aimX;
+            worldMouseY = aimY;
+          } else {
+            // Desktop: convert screen coordinates to world coordinates
+            worldMouseX = mousePosRef.current.x + cameraXRef.current;
+            worldMouseY = mousePosRef.current.y;
+          }
+          
           const bullets = playerRef.current.shoot({ x: worldMouseX, y: worldMouseY });
           if (bullets && bulletManagerRef.current) {
             // Handle both single bullet and array of bullets
@@ -434,6 +465,7 @@ function App() {
   };
 
   const handleMobileShootDown = () => {
+    // Just set shooting flag - direction will be calculated in game loop based on active keys
     mouseDownRef.current = true;
   };
 
