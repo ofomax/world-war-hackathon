@@ -83,7 +83,6 @@ export default class Player {
     }
     
     // Reset ducking (will be set below if key is pressed and timer allows)
-    const wasDucking = this.isDucking;
     this.isDucking = false;
     
     // Horizontal movement
@@ -338,7 +337,6 @@ export default class Player {
     const isCrouched = this.isDucking; // Crouch when ducking (S key)
     
     // Character dimensions (matching sprite proportions)
-    const charWidth = 64;
     const charHeight = 80;
     const centerX = 0;
     // When crouching, move character DOWN (closer to ground) and make shorter

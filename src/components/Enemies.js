@@ -968,7 +968,6 @@ export class HeavyGunner extends BaseEnemy {
     
     // Shoot horizontally toward player
     const dirX = player.x >= this.x ? 1 : -1;
-    const gunY = this.y - 55; // Same height as regular enemies
 
     this.bullets.push({
       x: gunBarrelX,

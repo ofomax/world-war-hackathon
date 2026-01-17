@@ -1,4 +1,4 @@
-import { GruntSoldier, CoverSoldier, Grenadier, HeavySoldier, AttackHelicopter, HeavyGunner } from './Enemies';
+import { GruntSoldier, CoverSoldier, Grenadier, AttackHelicopter, HeavyGunner } from './Enemies';
 import { AudioManager } from './AudioManager';
 
 export class EnemyManager {
@@ -311,6 +311,14 @@ export class EnemyManager {
             this.spawnCoverSoldier(cameraX);
             budgetUsed += this.enemyCosts.cover;
           }
+        }
+        break;
+        
+      default:
+        // Unknown wave type, spawn a single grunt
+        if (this.spawnBudget >= this.enemyCosts.grunt) {
+          this.spawnGrunt(cameraX);
+          budgetUsed += this.enemyCosts.grunt;
         }
         break;
     }
