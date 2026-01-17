@@ -8,6 +8,7 @@ import { Background } from "./components/Background";
 import { GameUI } from "./components/GameUI";
 import { IntroModal } from "./components/IntroModal";
 import { AudioManager } from "./components/AudioManager";
+import { MobileControls } from "./components/MobileControls";
 
 const CANVAS_WIDTH = 1024;
 const CANVAS_HEIGHT = 576;
@@ -114,7 +115,7 @@ function App() {
     };
   }, []);
 
-  // Mouse input (write to refs)
+  // Mouse and touch input (write to refs)
   useEffect(() => {
     const canvas = canvasRef.current;
     if (!canvas) return;
@@ -127,14 +128,43 @@ function App() {
     const handleMouseDown = () => (mouseDownRef.current = true);
     const handleMouseUp = () => (mouseDownRef.current = false);
 
+    // Touch events for mobile
+    const handleTouchMove = (e) => {
+      const rect = canvas.getBoundingClientRect();
+      const touch = e.touches[0];
+      if (touch) {
+        mousePosRef.current = { x: touch.clientX - rect.left, y: touch.clientY - rect.top };
+      }
+    };
+
+    const handleTouchStart = (e) => {
+      e.preventDefault();
+      const rect = canvas.getBoundingClientRect();
+      const touch = e.touches[0];
+      if (touch) {
+        mousePosRef.current = { x: touch.clientX - rect.left, y: touch.clientY - rect.top };
+        mouseDownRef.current = true;
+      }
+    };
+
+    const handleTouchEnd = () => {
+      mouseDownRef.current = false;
+    };
+
     canvas.addEventListener("mousemove", handleMouseMove);
     canvas.addEventListener("mousedown", handleMouseDown);
     canvas.addEventListener("mouseup", handleMouseUp);
+    canvas.addEventListener("touchmove", handleTouchMove, { passive: false });
+    canvas.addEventListener("touchstart", handleTouchStart, { passive: false });
+    canvas.addEventListener("touchend", handleTouchEnd);
 
     return () => {
       canvas.removeEventListener("mousemove", handleMouseMove);
       canvas.removeEventListener("mousedown", handleMouseDown);
       canvas.removeEventListener("mouseup", handleMouseUp);
+      canvas.removeEventListener("touchmove", handleTouchMove);
+      canvas.removeEventListener("touchstart", handleTouchStart);
+      canvas.removeEventListener("touchend", handleTouchEnd);
     };
   }, []);
 
@@ -394,22 +424,54 @@ function App() {
     cameraXRef.current = 0;
   };
 
+  // Mobile control handlers
+  const handleMobileKeyDown = (key) => {
+    keysRef.current[key] = true;
+  };
+
+  const handleMobileKeyUp = (key) => {
+    keysRef.current[key] = false;
+  };
+
+  const handleMobileShootDown = () => {
+    mouseDownRef.current = true;
+  };
+
+  const handleMobileShootUp = () => {
+    mouseDownRef.current = false;
+  };
+
+  const handleMobileGrenade = () => {
+    if (playerRef.current?.hasGrenades && (playerRef.current?.grenadeCount || 0) > 0) {
+      const worldMouseX = playerRef.current.x + (playerRef.current.facingRight ? 200 : -200);
+      const worldMouseY = playerRef.current.y - 20;
+      const grenade = playerRef.current.throwGrenade({ x: worldMouseX, y: worldMouseY });
+      if (grenade && bulletManagerRef.current) {
+        bulletManagerRef.current.addBullet(grenade);
+      }
+    }
+  };
+
+  const handleMobilePause = () => {
+    setGameState((prev) => ({ ...prev, paused: !prev.paused }));
+  };
+
   return (
     <div className="App">
       {!gameState.started && (
         <IntroModal onStart={handleStartGame} />
       )}
       
-              <GameUI
-                health={gameState.health}
-                score={gameState.score}
-                stage={gameState.stage}
-                gameOver={gameState.gameOver}
-                paused={gameState.paused}
-                playerName={gameState.playerName}
-                grenadeCount={gameState.grenadeCount}
-                onRestart={handleRestart}
-              />
+      <GameUI
+        health={gameState.health}
+        score={gameState.score}
+        stage={gameState.stage}
+        gameOver={gameState.gameOver}
+        paused={gameState.paused}
+        playerName={gameState.playerName}
+        grenadeCount={gameState.grenadeCount}
+        onRestart={handleRestart}
+      />
 
       <canvas
         ref={canvasRef}
@@ -423,6 +485,19 @@ function App() {
           visibility: gameState.started ? "visible" : "hidden"
         }}
       />
+
+      {gameState.started && (
+        <MobileControls
+          onKeyDown={handleMobileKeyDown}
+          onKeyUp={handleMobileKeyUp}
+          onShootDown={handleMobileShootDown}
+          onShootUp={handleMobileShootUp}
+          onGrenade={handleMobileGrenade}
+          onPause={handleMobilePause}
+          hasGrenades={playerRef.current?.hasGrenades || false}
+          grenadeCount={gameState.grenadeCount}
+        />
+      )}
     </div>
   );
 }

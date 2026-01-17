@@ -1,0 +1,118 @@
+/* Mobile Controls - Only visible on mobile devices */
+.mobile-controls {
+  display: none; /* Hidden by default on desktop */
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  padding: 15px;
+  background: linear-gradient(to top, rgba(0, 0, 0, 0.8), rgba(0, 0, 0, 0.4));
+  backdrop-filter: blur(10px);
+  z-index: 1000;
+  user-select: none;
+  -webkit-user-select: none;
+  touch-action: manipulation;
+}
+
+/* Show only on mobile devices */
+@media (max-width: 768px) {
+  .mobile-controls {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    gap: 20px;
+  }
+}
+
+.mobile-controls-left,
+.mobile-controls-right {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.mobile-controls-movement {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 5px;
+}
+
+.mobile-controls-horizontal {
+  display: flex;
+  gap: 5px;
+}
+
+.mobile-btn {
+  width: 50px;
+  height: 50px;
+  border: 2px solid #8B4513;
+  border-radius: 8px;
+  background: linear-gradient(135deg, #654321, #8B4513);
+  color: #FFD700;
+  font-size: 18px;
+  font-weight: bold;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+  transition: all 0.1s;
+  -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
+}
+
+.mobile-btn:active {
+  transform: scale(0.95);
+  background: linear-gradient(135deg, #8B4513, #654321);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+.mobile-btn-jump {
+  width: 50px;
+  height: 50px;
+}
+
+.mobile-btn-left,
+.mobile-btn-right,
+.mobile-btn-duck {
+  width: 50px;
+  height: 50px;
+}
+
+.mobile-btn-shoot {
+  width: 60px;
+  height: 60px;
+  font-size: 24px;
+  background: linear-gradient(135deg, #8B0000, #DC143C);
+}
+
+.mobile-btn-grenade {
+  width: 60px;
+  height: 60px;
+  font-size: 24px;
+  background: linear-gradient(135deg, #FF8C00, #FFA500);
+}
+
+.mobile-btn-pause {
+  width: 50px;
+  height: 50px;
+  font-size: 20px;
+  background: linear-gradient(135deg, #4B0082, #6A5ACD);
+}
+
+/* Prevent text selection and scrolling on buttons */
+.mobile-btn * {
+  pointer-events: none;
+}
+
+/* Ensure buttons work on touch devices */
+@media (hover: none) and (pointer: coarse) {
+  .mobile-btn:hover {
+    transform: none;
+  }
+  
+  .mobile-btn:active {
+    transform: scale(0.95);
+  }
+}
