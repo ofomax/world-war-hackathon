@@ -4,24 +4,24 @@ export class Background {
   static initialized = false;
 
   // ================= FILE PATHS =================
-  static skyPath = "/backgrounds/level1/sky.png";
-  static baseTilePath = "/backgrounds/level1/base_tile.png";
+  static skyPath = "/backgrounds/Level1/sky.png";
+  static baseTilePath = "/backgrounds/Level1/base_tile.png";
 
   static chunkSets = {
     walk: [
-      "/backgrounds/level1/chunk_walk_1.png",
-      "/backgrounds/level1/chunk_walk_2.png",
-      "/backgrounds/level1/chunk_walk_3.png",
+      "/backgrounds/Level1/chunk_walk_1.png",
+      "/backgrounds/Level1/chunk_walk_2.png",
+      "/backgrounds/Level1/chunk_walk_3.png",
     ],
     run: [
-      "/backgrounds/level1/chunk_run_1.png",
-      "/backgrounds/level1/chunk_run_2.png",
-      "/backgrounds/level1/chunk_run_3.png",
+      "/backgrounds/Level1/chunk_run_1.png",
+      "/backgrounds/Level1/chunk_run_2.png",
+      "/backgrounds/Level1/chunk_run_3.png",
     ],
     fast: [
-      "/backgrounds/level1/chunk_fast_1.png",
-      "/backgrounds/level1/chunk_fast_2.png",
-      "/backgrounds/level1/chunk_fast_3.png",
+      "/backgrounds/Level1/chunk_fast_1.png",
+      "/backgrounds/Level1/chunk_fast_2.png",
+      "/backgrounds/Level1/chunk_fast_3.png",
     ],
   };
 
